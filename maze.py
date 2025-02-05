@@ -169,49 +169,83 @@ def get_clicked_pos(pos):
     col = y // GRID_SIZE
     return row, col
 
-def main(win):
-    grid = make_grid(ROWS, COLS)
+def handle_left_click(pos, grid, start, end):
+    """Handle left mouse button click events"""
+    row, col = get_clicked_pos(pos)
+    node = grid[row][col]
     
+    if not start and node != end:
+        node.make_start()
+        return node, end
+    elif not end and node != start:
+        node.make_end()
+        return start, node
+    elif node != end and node != start:
+        node.make_barrier()
+    
+    return start, end
+
+def handle_right_click(pos, grid, start, end):
+    """Handle right mouse button click events"""
+    row, col = get_clicked_pos(pos)
+    node = grid[row][col]
+    node.reset()
+    
+    if node == start:
+        return None, end
+    elif node == end:
+        return start, None
+    
+    return start, end
+
+def update_grid_neighbors(grid):
+    """Update neighbors for all nodes in the grid"""
+    for row in grid:
+        for node in row:
+            node.update_neighbors(grid)
+
+def start_pathfinding(grid, start, end, draw_func):
+    """Initialize and start the pathfinding algorithm"""
+    if not (start and end):
+        return
+        
+    update_grid_neighbors(grid)
+    algorithm(draw_func, grid, start, end)
+
+def main(win):
+    """Main game loop with improved organization"""
+    grid = make_grid(ROWS, COLS)
     start = None
     end = None
     
-    run = True
-    while run:
+    running = True
+    while running:
         draw(win, grid)
+        
         for event in pygame.event.get():
+            # Handle quit event
             if event.type == pygame.QUIT:
-                run = False
-            
-            if pygame.mouse.get_pressed()[0]: # Left mouse button
+                running = False
+                continue
+                
+            # Handle mouse input
+            if pygame.mouse.get_pressed()[0]:  # Left click
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos)
-                node = grid[row][col]
-                if not start and node != end:
-                    start = node
-                    start.make_start()
-                elif not end and node != start:
-                    end = node
-                    end.make_end()
-                elif node != end and node != start:
-                    node.make_barrier()
-            
-            elif pygame.mouse.get_pressed()[2]: # Right mouse button
+                start, end = handle_left_click(pos, grid, start, end)
+                
+            elif pygame.mouse.get_pressed()[2]:  # Right click
                 pos = pygame.mouse.get_pos()
-                row, col = get_clicked_pos(pos)
-                node = grid[row][col]
-                node.reset()
-                if node == start:
-                    start = None
-                elif node == end:
-                    end = None
+                start, end = handle_right_click(pos, grid, start, end)
             
+            # Handle keyboard input
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and start and end:
-                    for row in grid:
-                        for node in row:
-                            node.update_neighbors(grid)
+                if event.key == pygame.K_SPACE:
+                    start_pathfinding(grid, start, end, lambda: draw(win, grid))
                     
-                    algorithm(lambda: draw(win, grid), grid, start, end)
+                elif event.key == pygame.K_c:  # Add clear functionality
+                    start = None
+                    end = None
+                    grid = make_grid(ROWS, COLS)
     
     pygame.quit()
 
