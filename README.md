@@ -1,83 +1,99 @@
-# A* Pathfinding Visualizer
+# A* Pathfinding Algorithm Visualizer
 
-A Python-based visualization tool that demonstrates the A* pathfinding algorithm using Pygame. This interactive application allows users to create obstacles, set start and end points, and watch the algorithm find the shortest path in real-time.
+A Python-based visualization tool for the A* pathfinding algorithm using Pygame. This application provides an interactive grid where users can place start points, end points, and barriers to visualize how the A* algorithm finds the shortest path.
 
 ## Features
 
-- Interactive grid-based visualization
-- Real-time pathfinding demonstration
-- Custom obstacle placement
-- Color-coded visualization of:
-  - Start point (Blue)
-  - End point (Grey)
-  - Obstacles (Black)
-  - Explored nodes (Red)
-  - Frontier nodes (Green)
-  - Final path (Turquoise)
+- Interactive grid system
+- Real-time visualization of the A* pathfinding algorithm
+- Place start point, end point, and barriers
+- Clear visualization
+- Reset functionality
+- Efficient pathfinding with Manhattan distance heuristic
 
-## Requirements
+## Prerequisites
 
+Before running this application, make sure you have the following installed:
 - Python 3.x
-- Pygame library
+- Pygame
 
-## Installation
-
-1. Ensure Python 3.x is installed on your system
-2. Install Pygame using pip:
+You can install Pygame using pip:
 ```bash
 pip install pygame
 ```
 
-## Usage
+## Project Structure
 
-1. Run the program:
-```bash
-python pathfinding_visualizer.py
+```
+Make-A-Maze/
+├── __init__.py
+├── main.py                     # Main entry point
+├── pathfinding_visualizer.py   # Core visualization logic
+├── node.py                     # Node class definition
+├── node_state.py              # Node state enums
+└── config.py                  # Configuration settings
 ```
 
-2. Using the visualizer:
-   - Left-click to:
-     1. Place the start point (first click)
-     2. Place the end point (second click)
-     3. Create obstacles (subsequent clicks)
-   - Right-click to erase any point
-   - Press SPACE to start the pathfinding algorithm once start and end points are placed
+## Usage
+
+1. Run the application:
+```bash
+python main.py
+```
+
+2. Controls:
+   - Left Click: Place nodes in this order:
+     1. First click places the start point (blue)
+     2. Second click places the end point (grey)
+     3. Subsequent clicks place barriers (black)
+   - Right Click: Remove nodes
+   - Spacebar: Start the pathfinding algorithm
+   - 'C' key: Clear the grid
+
+3. Visualization Colors:
+   - White: Empty cells
+   - Blue: Start point
+   - Grey: End point
+   - Black: Barriers
+   - Green: Open set (nodes to be evaluated)
+   - Red: Closed set (evaluated nodes)
+   - Turquoise: Final path
 
 ## How It Works
 
-The visualizer implements the A* pathfinding algorithm, which:
-1. Uses a heuristic function (Manhattan distance) to estimate the distance to the goal
-2. Explores nodes based on both the current path cost and estimated remaining distance
-3. Guarantees the shortest path when found
-4. Visualizes the exploration process in real-time
+The A* algorithm works by maintaining two sets of nodes:
+1. Open Set: Nodes that need to be evaluated
+2. Closed Set: Nodes that have been evaluated
 
-## Color Guide
+The algorithm uses the Manhattan distance heuristic to estimate the distance between any node and the end point. It combines this with the known distance from the start to find the most promising path to explore.
 
-- White: Unexplored nodes
-- Blue: Start point
-- Grey: End point
-- Black: Obstacles/Walls
-- Green: Nodes in the open set (frontier)
-- Red: Explored nodes
-- Turquoise: Final path
+Each node's priority is calculated using:
+```
+f_score = g_score + h_score
+```
+Where:
+- g_score: Cost from start to current node
+- h_score: Estimated cost from current node to end (Manhattan distance)
 
-## Controls
+## Contributing
 
-- Left Mouse Button: Place points/obstacles
-- Right Mouse Button: Erase points/obstacles
-- Spacebar: Start algorithm
-- Close Window: Exit program
+Feel free to fork this project and submit pull requests. You can also open issues for bugs or feature requests.
 
-## Technical Details
+## License
 
-- Grid Size: 40x40
-- Window Size: 800x800 pixels
-- Uses Priority Queue for efficient node selection
-- Implements Manhattan distance heuristic
-- Supports four-directional movement (up, down, left, right)
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Notes
+## Acknowledgments
 
-- The algorithm will only start when both start and end points are placed
-- Obstacles can be placed before or after placing start/end points
-- The visualization can be reset by closing and reopening the program
+- Based on the A* pathfinding algorithm
+- Built using Pygame for visualization
+- Inspired by various pathfinding visualizers and educational tools
+
+## Future Improvements
+
+- Add diagonal movement option
+- Implement different heuristics
+- Add maze generation algorithms
+- Support for weighted paths
+- Add animation speed control
+- Save/load grid configurations
