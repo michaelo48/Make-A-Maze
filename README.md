@@ -70,8 +70,8 @@ The visualizer implements the A* pathfinding algorithm, which:
 
 ## Technical Details
 
-- Grid Size: 30x30
-- Window Size: 600x600 pixels
+- Grid Size: 40x40
+- Window Size: 800x800 pixels
 - Uses Priority Queue for efficient node selection
 - Implements Manhattan distance heuristic
 - Supports four-directional movement (up, down, left, right)
